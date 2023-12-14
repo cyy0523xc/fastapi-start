@@ -62,8 +62,7 @@ async def test_api(test_id: int):
     from fastapi import HTTPException
     if test_id == 0:
         # 模拟触发某个内部逻辑错误
-        raise InternalException(code=status.HTTP_600_ID_NOT_EXISTED,
-                                message="id为0")
+        raise InternalException(code=status.HTTP_600_ID_NOT_EXISTED, message="id为0")
     elif test_id == 1:
         raise Exception("模拟exception异常")
     elif test_id == 2:

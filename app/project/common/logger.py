@@ -87,7 +87,7 @@ class TraceID:
 
     @staticmethod
     def get_req_id() -> str:
-        return _x_request_id.get(),
+        return _x_request_id.get()
 
 
 def _logger_filter(record):

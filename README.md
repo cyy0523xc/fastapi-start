@@ -298,6 +298,7 @@ fas module add captcha
 ### 4.4 注意事项
 
 - 模块下还可以嵌套子模块，不断套娃，但是不建议这么干，这会让系统变得过于复杂；
+- 启动后，打开`http://ip:port/docs`如果发现错误`Unable to render this definition ....`，这是js和css静态文件不对应导致的，更新到对应版本（如果是最新的fastapi，通常更新到最新版本即可）
 
 ## 5. Python编码规范
 

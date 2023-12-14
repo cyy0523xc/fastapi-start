@@ -63,6 +63,10 @@ class Project:
         os.chdir(name)
         project_init(name, title=title, desc=desc)
 
+    def new(self, name: str, title: str = '', desc: str = ''):
+        """create功能功能的别名"""
+        self.create(name, title=title, desc=desc)
+
 
 def project_init(project_name: str, title: str = '', desc: str = ''):
     """项目初始化

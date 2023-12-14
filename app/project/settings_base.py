@@ -30,4 +30,4 @@ ROOT_PATH = Path(__file__).absolute().parent
 LOG_ROOT_PATH = ROOT_PATH.joinpath("logs")
 
 # 用于追踪的请求ID字段
-REQUEST_ID_KEY = "x-request-id"
+REQUEST_ID_KEY = "X-Request-Id"

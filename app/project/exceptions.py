@@ -15,7 +15,9 @@ from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
 from traceback import format_exc
 from typing import Any
+
 from settings import SYSTEM_CODE_BASE
+from common.logger import logger, TraceID
 
 # 状态码基数应该符合这两个条件
 assert SYSTEM_CODE_BASE >= 1000
@@ -24,9 +26,6 @@ assert SYSTEM_CODE_BASE % 1000 == 0
 
 def init_exception(app: FastAPI):
     """初始化异常处理"""
-    def get_detail(msg: str) -> str:
-        return '\n'.join(msg.strip().split('\n')[-3:])
-
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(request, exc: Exception):
         """请求参数异常"""
@@ -40,40 +39,29 @@ def init_exception(app: FastAPI):
     @app.exception_handler(BaseException)
     async def base_exception_handler(request, exc: BaseException):
         """捕获自定义异常"""
-        # 把异常的详细信息打印到控制台，也可以在此实现将日志写入到对应的文件系统等
-        print(format_exc(), flush=True)
         return ErrorResponse(exc.code, message=exc.message, detail=exc.detail)
 
     @app.exception_handler(HTTPException)
     async def http_exception_handler(request, exc: HTTPException):
         """捕获FastAPI异常"""
-        print(format_exc(), flush=True)
         return ErrorResponse(exc.status_code, message=str(exc.detail), detail=exc.detail)
 
     @app.exception_handler(Exception)
     async def allexception_handler(request, exc: Exception):
-        """捕获所有其他的异常
-        """
-        msg = format_exc()
-        print(msg, flush=True)
-        return ErrorResponse(status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            message='内部异常', detail=get_detail(msg))
+        # TODO 这里可能会获取不到对应的追踪ID
+        return ErrorResponse(status.HTTP_500_INTERNAL_SERVER_ERROR, message='内部异常', detail=str(exc))
 
     @app.exception_handler(KeyError)
     async def keyerror_handler(request, exc: KeyError):
-        """捕获所有其他的异常"""
-        msg = format_exc()
-        print(msg, flush=True)
-        return ErrorResponse(status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            message='内部异常', detail=get_detail(msg))
+        return ErrorResponse(status.HTTP_500_INTERNAL_SERVER_ERROR, message='内部Key异常', detail=str(exc))
 
     @app.exception_handler(ValueError)
     async def valueerror_handler(request, exc: ValueError):
-        """捕获所有其他的异常"""
-        msg = format_exc()
-        print(msg, flush=True)
-        return ErrorResponse(status.HTTP_500_INTERNAL_SERVER_ERROR,
-                            message='内部异常', detail=get_detail(msg))
+        return ErrorResponse(status.HTTP_500_INTERNAL_SERVER_ERROR, message='内部Value异常', detail=str(exc))
+
+    @app.exception_handler(TypeError)
+    async def type_error_handler(request, exc: ValueError):
+        return ErrorResponse(status.HTTP_500_INTERNAL_SERVER_ERROR, message='内部Type异常', detail=str(exc))
 
 
 class status:
@@ -134,7 +122,7 @@ class BaseException(HTTPException):
         super().__init__(status_code, detail)
 
     def __str__(self) -> str:
-        return f"code={self.code} message={self.message}\n detail={self.detail}"
+        return f"code={self.code} message={self.message}\ndetail={self.detail}"
 
 
 class InternalException(BaseException):
@@ -173,16 +161,17 @@ class ErrorResponse(JSONResponse):
         :param message 异常信息，通常是用于展示给用户。如果该值为空，则会默认为code值对应的异常信息
         :param detail 详细的异常信息，通常用于开发者排除定位问题使用
         """
-        if code >= 1000:    # 指定的code值，可能来自上游服务的异常
-            super().__init__(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                             content={"code": code, 'message': message, 'detail': detail})
-            return
-        # http的状态码大于600会报错，超过600响应为内部错误
-        status_code = code if code < 600 else status.HTTP_500_INTERNAL_SERVER_ERROR
-        message = messages[code] if message is None else message
-        super().__init__(status_code=status_code,
-                         content={"code": SYSTEM_CODE_BASE + code,
-                                  'message': message, 'detail': detail})
+        if code < 1000:
+            message = messages[code] if message is None else message
+            # http的状态码大于600会报错，超过600响应为内部错误
+            status_code = code if code < 600 else status.HTTP_500_INTERNAL_SERVER_ERROR
+            code = SYSTEM_CODE_BASE + code
+        else:
+            status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+
+        logger.error(f"code={code}, message={message}, detail={detail}\n{format_exc()}")
+        message = f"{message},  日志追踪ID: {TraceID.get_req_id()}"
+        super().__init__(status_code=status_code, content={"code": code, 'message': message, 'detail': detail})
 
 
 if __name__ == "__main__":

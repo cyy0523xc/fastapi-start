@@ -5,14 +5,16 @@
 # Email: cyy0523xc@gmail.com
 # Created Time: 2022-06-09
 from typing import List
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from fastapi.openapi.docs import (
     get_swagger_ui_html,
     get_swagger_ui_oauth2_redirect_html,
 )
 from fastapi.staticfiles import StaticFiles
 
+from settings import REQUEST_ID_KEY
 from schema import VersionResp, StatusCodeResp
+from common.logger import TraceID
 from exceptions import get_status
 from exceptions import init_exception
 
@@ -50,6 +52,15 @@ def init_app(version='1.0', title='接口文档', description='描述文档', de
 
     # 初始化异常处理
     init_exception(app)
+
+    @app.middleware("http")
+    async def set_logger(request: Request, call_next):
+        # 设置日志的全链路追踪
+        _req_id_val = request.headers.get(REQUEST_ID_KEY, "")
+        req_id = TraceID.set(_req_id_val)
+        response: Response = await call_next(request)
+        response.headers[REQUEST_ID_KEY] = req_id.get()
+        return response
 
     @app.get("/version", summary='获取系统版本号',
             response_model=VersionResp)
