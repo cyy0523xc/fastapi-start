@@ -72,6 +72,7 @@ setup(
                                     os.path.join('project', 'static', '*'),
                                     os.path.join('project', 'module', '*'),
                                     os.path.join('project', 'captcha_module', '*'),
+                                    os.path.join('project', 'token_module', '*'),
                                     ]},
     entry_points={      # 安装命令
         "console_scripts": [

@@ -54,6 +54,10 @@ async def add_process_time_header(request: Request, call_next):
 # from captcha_module.router import router as captcha_router
 # app.include_router(captcha_router, prefix="/captcha", tags=["验证码模块"])
 
+# token生成与校验模块
+# from token_module.router import router as token_router
+# app.include_router(token_router, prefix="/token", tags=["token"])
+
 
 @app.get("/test/{test_id}", summary='测试接口',
          response_model=VersionResp)

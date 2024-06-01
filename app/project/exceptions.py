@@ -76,7 +76,9 @@ class status:
     HTTP_500_INTERNAL_SERVER_ERROR = fastapiStatus.HTTP_500_INTERNAL_SERVER_ERROR
     HTTP_504_GATEWAY_TIMEOUT = fastapiStatus.HTTP_504_GATEWAY_TIMEOUT
     # 自定义常量值应该取值在600-999
-    HTTP_600_ID_NOT_EXISTED = 600    # 示例
+    HTTP_600_ID_NOT_EXISTED = 600
+    HTTP_601_SIGN_VERIFY_ERROR = 601
+    HTTP_602_TOKEN_VERIFY_ERROR = 602
 
 # 状态码对应的异常信息(默认)
 messages = {
@@ -90,6 +92,8 @@ messages = {
     status.HTTP_504_GATEWAY_TIMEOUT: '请求上游服务时超时',
     # 600-999
     status.HTTP_600_ID_NOT_EXISTED: '请求ID不存在',
+    status.HTTP_601_SIGN_VERIFY_ERROR: '签名检验不通过',
+    status.HTTP_602_TOKEN_VERIFY_ERROR: 'token校验不通过'
 }
 
 
