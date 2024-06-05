@@ -2,9 +2,9 @@
 #
 # 加解密模块
 #
-# Author: alex cai
-# Email: caiyingyao@ibbd.net
-# Created Time: 2024-06-01
+# Author: __author__
+# Email: __email__
+# Created Time: __created_time__
 import json
 import base64
 import hashlib
