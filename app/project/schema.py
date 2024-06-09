@@ -7,6 +7,11 @@
 from pydantic import BaseModel, Field
 
 
+class ApiBaseModel(BaseModel):
+    """接口基础模型"""
+    debug: bool = Field(False, title='是否开启测试模式')
+
+
 class MessageResp(BaseModel):
     message: str = Field(..., title='提示信息', description='提示信息')
 

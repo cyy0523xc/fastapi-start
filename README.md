@@ -6,6 +6,11 @@
 - 提升后端​开发效率，减少重复工作。
 - 增加不同项目间共享模块开发的可能性​。
 
+最佳实践参考：
+
+- 英文：https://github.com/zhanymkanov/fastapi-best-practices
+- 中文：https://hellowac.github.io/fastapi-best-practices-zh-cn/
+
 ## 1. 功能介绍
 
 - [x] 项目初始化（生成规范的项目目录）

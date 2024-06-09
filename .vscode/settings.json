@@ -1,9 +1,11 @@
 {
     "python.autoComplete.extraPaths": [
-        "./app"
+        "./app",
+        "./app/project"
     ],
     "python.analysis.extraPaths": [
-        "./app"
+        "./app",
+        "./app/project"
     ],
     "files.exclude": {
         "*/__pycache__": true,

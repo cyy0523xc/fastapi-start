@@ -15,8 +15,7 @@ router = APIRouter(
 )
 
 
-@router.get("/", summary='模块测试API',
-            response_model=MessageResp)
+@router.get("/", summary='模块测试API', response_model=MessageResp)
 async def test_api():
     """模块测试API"""
     return {'message': 'ok'}
