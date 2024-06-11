@@ -9,7 +9,7 @@ from fastapi import APIRouter
 # from fastapi import Depends, HTTPException
 
 from exceptions import InternalException, status
-from .schema import TokenGenerateParams, TokenGenerateResp
+from .schema import TokenGenerateParams, TokenGenerateResp, TokenData
 from .utils import create_token
 
 router = APIRouter(
@@ -31,13 +31,11 @@ async def token_generate_api(
     if not params.verify_signature(password):
         raise InternalException(status.HTTP_601_SIGN_VERIFY_ERROR)
 
-    # TODO 获取用户的权限tag
-    # 通常是通过用户ID查到用户角色，而角色可以直接关联tag，这些tag可以是定义在api的tags属性中
-
-    # TODO 合并接口输入的权限tag和数据库中的tag
+    # TODO 如果可能，则可以在此对路径参数进行校验
+    # 例如参数允许访问task_id=100的任务，但是实际上该用户并没有访问该任务的权限，则可以直接抛出异常信息
 
     # 生成token
-    token = create_token(params.data, params.expire)
-    return TokenGenerateResp(token=token, user_id=user_id,
-                             auth_tags=params.data.auth_tags,
-                             path_params=params.data.path_params)
+    token_data = TokenData(params.data)
+    token_data.user_id = user_id
+    token = create_token(token_data, params.expire)
+    return TokenGenerateResp(token=token, user_id=user_id)

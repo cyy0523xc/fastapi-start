@@ -1,10 +1,12 @@
-# token_module-模块说明
+# token模块说明
 
-token的生成与校验模块: 该模块的目标是对外生成访问token，可以指定该token只能访问某些页面，使用场景通常是
+token的生成与校验模块: 该模块的目标是对外生成访问token，可以指定该token只能访问某些页面。
 
-尽量将访问权限切面，可以无痛的实现功能权限和详情页的数据权限。
+关于数据权限校验：
 
-说明：数据权限通常可以分为列表页数据权限和详情页数据权限，这里不解决列表页的数据权限。
+- 通过路径参数校验：如路由`/task/{task_id}`这种可以通过路由中的参数就能控制；
+- 但是数据权限不是说在路由参数中定义就可以了，还应该结合该用户的实际权限，也就是说该用户是否具有访问该资源的权限；
+- 数据权限更多是需要在接口的依赖(Depends)中实现。
 
 ## 1. 使用说明
 
@@ -22,7 +24,7 @@ token的生成与校验模块: 该模块的目标是对外生成访问token，�
     "signature": "xxxxxxxx",
     "data": {
         "auth_tags": ["任务详情页"],
-        "path_params": [["task_id", [123, 45]]]
+        "tasks_id", [123, 45]
     }
 }
 ```
@@ -30,9 +32,9 @@ token的生成与校验模块: 该模块的目标是对外生成访问token，�
 对这个参数说明一下，这次访问的用户名是test，生成token的有效期是一天（86400秒），参数签名是xxxxxxxx（这个签名用来保障data中的数据没有被篡改），token参数有两个数据：
 
 - `auth_tags`: 这个定义这个token能够访问的tag有哪些，这里定义了至多只能访问任务详情页这个tag，也就是说接口定义时，tags参数必须包含该tag才能访问。
-- `path_params`: 这个用来限制token能够访问的路径参数，如上限制了如果当前url中包含了task_id参数，则其值只能时123/45中的一个。
+- `tasks_id`: 这个用来限制token能够访问的路径参数，如上限制了如果当前url中包含了task_id参数，则其值只能时123/45中的一个。
 
-这里需要重点说明的是，并不是接口满足了`auth_tags`和`path_params`就一定能访问对应的接口，因为还要看该用户是否有相应的权限，例如该用户本身需要具有访问任务详情页这个tag的权限，是否具有访问123/45这两个任务的权限，如果其中一项不满足，那这个token也无法访问。
+这里需要重点说明的是，并不是接口满足了`auth_tags`和`tasks_id`就一定能访问对应的接口，因为还要看该用户是否有相应的权限，例如该用户本身是否具有访问任务详情页这个tag的权限，是否具有访问123/45这两个任务的权限，如果其中一项不满足，那这个token也无法访问。
 
 #### 1.1.1 关于嵌套参数的数据权限
 
@@ -41,15 +43,15 @@ token的生成与校验模块: 该模块的目标是对外生成访问token，�
 这时生成token的参数应该类似这样：
 
 ```json
-"path_params": [
-    ["dept_id", ["xxxxx001"]],
-    ["task_id", [1,2,3]]
-]
+{
+    "dept_id": "xxxxx001",
+    "tasks_id": [1,2,3]
+}
 ```
 
-需要注意的是，这两个参数是具有先后顺序的，如当前访问的路径为`/dept/xxxxx001/task/3`（dept_id=xxxxx001, task_id=3），如果权限参数为
+需要注意的是，如当前访问的路径为`/dept/xxxxx001/task/3`（dept_id=xxxxx001, task_id=3），则是token校验是通过的。而对于路径`/dept/xxxxx001`也应该是通过的。
 
-但是这也无法解决复杂权限的嵌套问题，例如某用户有A部门的任务ID为3的权限以及B部门的任务ID为4的权限，这时就没法通过权限嵌套来解决
+但是这也无法解决复杂权限的嵌套问题，例如某用户有A部门的任务ID为3的权限以及B部门的任务ID为4的权限，这种复杂的嵌套就无法通过路径参数来定义这个权限控制。
 
 ### 1.1.2 不支持列表页的数据权限
 
@@ -61,17 +63,17 @@ token的生成与校验模块: 该模块的目标是对外生成访问token，�
 
 ```python
 from fastapi import Depends, Path
-from .utils import get_token_data
+from .utils import valid_data
 
 @app.post(path="/task/{task_id}", summary="获取单个任务的详细数据", ...)
 async def task_detail_api(
     task_id: int = Path(..., title="任务id"),
     # ...,
-    token_data=Depends(get_token_data)
+    token_data=Depends(valid_data)
 ):
 ```
 
-这里主要就是：`token_data=Depends(get_token_data)`，这在获取token的时候，就自动完成了token校验。
+这里主要就是：`token_data=Depends(valid_data)`，这在获取token的时候，就自动完成了token校验。
 
 ## 2. 模块开发者
 

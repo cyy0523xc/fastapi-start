@@ -6,10 +6,13 @@
 # Author: __author__
 # Email: __email__
 # Created Time: __created_time__
-import os
 import sys
-run_path = os.path.dirname(os.path.dirname(__file__))
-sys.path.insert(0, run_path)
+from pathlib import Path
+
+run_path = Path(__file__).parent.parent.as_posix()
+if run_path not in sys.path:
+    print(f"增加路径: {run_path}")
+    sys.path.insert(0, run_path)
 print("运行目录:", run_path)
 
 
