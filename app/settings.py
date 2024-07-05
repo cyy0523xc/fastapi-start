@@ -14,7 +14,8 @@ import os
 # 0.8.0: 增加http的post和get统一封装，增加logger日志统一封装，优化配置文件
 # 0.8.1: 完善异常与日志记录
 # 0.8.2: 增加token内置模块
-VERSION = "0.8.2"
+# 0.8.3: 实现自定义模块的自动加载
+VERSION = "0.8.3"
 
 # 包跟目录
 package_path = os.path.dirname(os.path.realpath(__file__))

@@ -134,10 +134,8 @@ uvicorn main:app --reload --host 0.0.0.0
 # test是模块名称，可以设定
 fas module new --name=test
 
-# 添加模块之后，要使模块生效，需要手动在app/main.py文件中注册该路由
-# prefix: 该参数定义路由的前缀，每个模块的路由前缀必须是唯一的
-from test_module.router import router as test_router
-app.include_router(test_router, prefix="/test", tags=["测试模块"])
+# 添加模块之后，需要根据实际情况修改该模块目录下的__init__.py文件中的模块信息配置
+# 在模块启动之后，会在main.py中自动加载。
 
 # 在当前目录增加一个test.py文件
 # python是文件类型，test是文件名

@@ -19,10 +19,6 @@ fas module add --help
 from common.connections import init_redis
 init_redis('192.168.1.242')   # 初始化redis
 
-# 加载验证码模块
-from captcha_module.router import router as captcha_router
-app.include_router(captcha_router, prefix="/captcha", tags=["验证码模块"])
-
 # 如果需要配置验证码的有效期等
 from captcha_module.api import config as captcha_config
 # 配置验证码有效期，及在redis中的前缀（应该避免和其他业务冲突）

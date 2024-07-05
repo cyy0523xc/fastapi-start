@@ -7,7 +7,7 @@
 
 # 通常配置变量中，和基础配置文件中的值不一致时，才需要移到这里进行重新定义
 # 在这里重新定义的变量，会覆盖基础配置文件中的值
-from .settings_base import *
+from settings_base import *
 
 # 缓存基础配置文件中的变量名
 __local_keys__ = set(locals().keys())

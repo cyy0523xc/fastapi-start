@@ -10,15 +10,18 @@ project-name
 │   ├── logs                 # 日志保存目录
 │   ├── static               # 静态文件目录，主要是FastAPI使用的静态文件
 │   ├── common               # 项目公共基础函数和类库目录
+│   │   ├── __init__.py      #
 │   │   ├── connection.py    # 常用的链接对象，如redis
 │   │   ├── encrypt.py       # 常用的加解密函数，如md5/RSA等
 │   │   ├── http.py          # http请求基础工具函数
 │   │   └── logger.py        # 日志基础工具库
 │   ├── example_module       # 接口样例模块，目录名后缀统一为_module
+│   │   ├── __init__.py      # 模块配置等信息
 │   │   ├── router.py        # 模块的路由入口
 │   │   ├── schema.py        # 模块的 pydantic的模型
 │   │   ├── router_test.py   # 模块入口单元测试
 │   │   └── README.md        # 模块说明文件
+│   ├── __init__.py          #
 │   ├── schema.py            # 基础接口数据类型
 │   ├── readme.md            # FastAPI 接口文档的使用说明
 │   ├── main.py              # 项目入口，用于启动 FastAPI 应用程序

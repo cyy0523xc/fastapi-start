@@ -13,6 +13,7 @@ from utils import parse_readme
 from schema import VersionResp
 from exceptions import status, InternalException
 from init_app import init_app
+from module_load import module_auto_load
 
 # 初始化app
 version = "0.5.0"     # 系统版本号
@@ -46,17 +47,8 @@ async def add_process_time_header(request: Request, call_next):
 # from common.connections import init_redis
 # init_redis('192.168.1.242')   # 配置redis host
 
-# 加载模块路由
-# from test_module.router import router as test_router
-# app.include_router(test_router, prefix="/test", tags=["测试模块"])
-
-# 加载验证码模块
-# from captcha_module.router import router as captcha_router
-# app.include_router(captcha_router, prefix="/captcha", tags=["验证码模块"])
-
-# token生成与校验模块
-# from token_module.router import router as token_router
-# app.include_router(token_router, prefix="/token", tags=["token"])
+# 自动加载模块路由
+module_auto_load(app)
 
 
 @app.get("/test/{test_id}", summary='测试接口',
