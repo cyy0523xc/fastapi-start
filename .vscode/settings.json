@@ -13,5 +13,6 @@
         "*/*/*/__pycache__": true,
         "build": true,
         "*.egg-info": true
-    }
+    },
+    "python.analysis.autoImportCompletions": true
 }

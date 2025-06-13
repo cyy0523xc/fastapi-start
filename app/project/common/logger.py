@@ -101,8 +101,8 @@ if not log_path_root.is_dir():
 
 # 每次重启会生成新的日志
 log_path_info = log_path_root.joinpath('info-{time:YYYYMMDD}.log')
-log_path_warning = log_path_root.joinpath(f'warning.log')
-log_path_error = log_path_root.joinpath(f'error.log')
+log_path_warning = log_path_root.joinpath('warning.log')
+log_path_error = log_path_root.joinpath('error.log')
 """
 https://cloud.tencent.com/developer/article/1849382
 backtrace (bool, optional) : 格式化的异常跟踪是否应该向上扩展，超出捕获点，以显示生成错误的完整堆栈跟踪。

@@ -26,6 +26,14 @@ class CodeCheck:
         """
         os.system(f'mypy {path}')
 
+    def ruff(self, path="."):
+        """使用 uvx ruff check 进行格式检查
+
+        Example:
+            fas check ruff
+        """
+        os.system(f'uvx ruff check {path}')
+
     def flake8(self, path='', ignore: str = '', select: str = '',
                autopep8: bool = False, max_line_length: int = 110):
         """PEP8代码风格审查

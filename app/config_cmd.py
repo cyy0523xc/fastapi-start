@@ -67,7 +67,7 @@ class Config:
         """
         method = method.upper()
         if method not in ('POST', 'GET'):
-            print(f"method只能取值：POST or GET")
+            print("method只能取值：POST or GET")
             return
         # 规范路由样式
         router = router.strip().lower()

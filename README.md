@@ -8,8 +8,8 @@
 
 最佳实践参考：
 
-- 英文：https://github.com/zhanymkanov/fastapi-best-practices
-- 中文：https://hellowac.github.io/fastapi-best-practices-zh-cn/
+- 英文：[FastAPI最佳实践（英文）](https://github.com/zhanymkanov/fastapi-best-practices)
+- 中文：[FastAPI最佳实践（中文）](https://hellowac.github.io/fastapi-best-practices-zh-cn/)
 
 ## 1. 功能介绍
 

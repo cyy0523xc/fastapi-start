@@ -52,8 +52,9 @@ def __load_module(app: FastAPI, module_name: str):
     # 模块是否开启
     try:
         module_enable = getattr(module, ModuleAttr.enable.value)
-    except Exception as e:
-        module_name = True
+    except Exception as _:
+        logger.info(f"模块 {module_name} 没有 {ModuleAttr.enable.value} 属性，默认开启")
+        module_enable = True
     if not module_enable:
         logger.info(f"该模块处于关闭状态：{module_name}")
         return
@@ -67,7 +68,8 @@ def __load_module(app: FastAPI, module_name: str):
     # 获取模块的tags
     try:
         router_tags = getattr(module, ModuleAttr.tags.value)
-    except Exception as e:
+    except Exception as _:
+        logger.info(f"模块 {module_name} 没有 {ModuleAttr.tags.value} 属性，默认tags为空")
         router_tags = []
 
     # 将路由器添加到FastAPI应用中

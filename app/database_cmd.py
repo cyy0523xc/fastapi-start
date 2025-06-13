@@ -44,7 +44,7 @@ class Database:
             table_prefix (str, optional): 表名前缀，如表名为pre_table1，其中pre为前缀，可以使用该参数统一去除模型名的前缀. Defaults to ''.
         """
         if '"' in password:
-            raise Exception(f"password中包含了双引号")
+            raise Exception("password中包含了双引号")
 
         # 生成模型文件
         command = f"sqlacodegen mysql+pymysql://\"{user}\":\"{password}\"@{host}:{port}/{db_name}?charset={chartset}"
@@ -54,7 +54,7 @@ class Database:
             command += f" --outfile \"{save_path}\""
         if tables:
             command += f" --tables \"{','.join(tables)}\""
-        resp = os.system(command)
+        _ = os.system(command)
         # print("-->", resp)
         # print(command)
         if save_path and not os.path.isfile(save_path):

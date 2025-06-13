@@ -104,6 +104,11 @@ app.include_router(test_router, prefix="/test", tags=["测试模块"])
 # 在当前目录增加一个test.py文件
 # python是文件类型，test是文件名
 fas file python test
+
+# 代码风格检测（可以优先使用ruff）
+fas check ruff
+fas check mypy
+fas check flake8
 ```
 
 fas也支持一些内置模块：

@@ -46,7 +46,7 @@ project-name
 
 - 所有代码都放到/app目录下
 - 所有接口模块的目录名都以_module为后缀
-  - 每个接口模块都包含router.py/schema.py/readme.md文件
+- 每个接口模块都包含router.py/schema.py/readme.md文件
 
 ## 接口使用说明
 
