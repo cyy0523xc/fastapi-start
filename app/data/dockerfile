@@ -1,9 +1,9 @@
-FROM python:3.8
+FROM python:3.12
 
 LABEL user="__author__"
 LABEL email="__email__"
 LABEL version="1.0"
-LABEL description="基于python3.8的FastAPI镜像"
+LABEL description="基于python3.12的FastAPI镜像"
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update -y \
